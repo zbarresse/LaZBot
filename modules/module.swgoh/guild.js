@@ -155,6 +155,74 @@ async function guildStats( obj ) {
             
 }
 
+async function guildZetas( obj ) {
+
+    let lang = 'ENG_US';
+    let procedure, args = null;
+    if( !obj.cmdObj.args.text || obj.cmdObj.args.text === 'help' ) { return obj.help(obj.cmdObj.help); }
+    
+    if( obj.cmdObj.args.text.match(/\d{9}/) ) { obj.cmdObj.args.allycode = obj.cmdObj.args.text; }
+    if( obj.cmdObj.args.allycode ) {
+        procedure = obj.moduleConfig.queries.GET_GUILD_ZETAS_BY_ALLYCODE;
+        args = [ obj.cmdObj.args.allycode, lang ];
+    } else {
+        procedure = obj.moduleConfig.queries.GET_GUILD_ZETAS_BY_GUILDNAME;
+        args = [ '%'+obj.cmdObj.args.text+'%', lang ];
+    } 
+    
+    let result = null;
+    try { 
+        const DatabaseHandler = require(obj.clientConfig.path+'/utilities/db-handler.js');
+        result = await DatabaseHandler.getRows( obj.clientConfig.settings.datadb, procedure, args );
+    } catch(e) {
+        return obj.error('doGuilds.doStoredProcedure',e);
+    }
+    
+    result = result[0];
+    if( (!result || result.length === 0) && obj.cmdObj.args.allycode ) { return obj.fail('No guilds found with this allycode'); }
+    else if( !result || result.length === 0 ) { return obj.fail('No guilds found with this name'); }
+        
+    let reply = {};
+    reply.title = 'Guild-wide zeta collection for '+result[0].guildName;
+    reply.description = '';
+    reply.fields = [];
+    
+    let cur = null;
+    let field = {};   
+    field.text = ''; 
+    for( let i of result ) {
+
+        if( i.unitName !== cur ) {
+            if( cur ) { 
+                field.text += '`------------------------------`';
+	            reply.fields.push( field );
+	            if( reply.fields.length > 20 ) { 
+	               obj.success(reply);
+	               reply.fields = []; 
+	            }
+            }
+            cur = i.unitName;
+	        field = {};
+	        field.title = JSON.parse(i.unitName);
+	        field.inline = true;
+	        field.text = '';     
+        }  
+        field.text += '`['+' '.repeat(2 - i.count.toString().length)+i.count+']` : *'+JSON.parse(i.abilityName)+'*\n';
+    }
+    if( field.title ) { reply.fields.push( field ); }
+    
+        
+    
+    field = {};
+    field.title = "For roster details, try";
+    field.text  = '`'+obj.cmdObj.prefix+obj.cmdObj.cmd+' details '+result[0].guildName+'`'
+    
+    reply.fields.push( field );
+    
+    return obj.success(reply);
+            
+}
+
 /** EXPORTS **/
 module.exports = { 
 	guild: async ( obj ) => { 
@@ -165,5 +233,8 @@ module.exports = {
     },
 	guildStats: async ( obj ) => { 
     	return await guildStats( obj ); 
+    },
+    guildZetas: async ( obj ) => { 
+        return await guildZetas( obj ); 
     }
 }

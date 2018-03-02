@@ -13,7 +13,7 @@
     "commands":{
     
     	"eval":{
-			"aliases":["e"],
+			"aliases":["evaluate"],
 			"procedure":"eval",
 			"args":["text"],
 			"help":{

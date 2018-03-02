@@ -146,6 +146,19 @@
 	    	},
 	    	"subcommands":{}
 		},
+		"event":{
+			"aliases":["e","events"],
+			"procedure":"doEvent",
+			"args":["id"],
+			"color":"0x587f42",
+			"help":{
+	            "id":"event",
+	            "title":"SWGOH Event Schedule",
+	            "text":"Peek the currect event schedule\nNote: *subject to change*",
+	            "example":"*%PREFIX%%COMMAND%*"
+	    	},
+	    	"subcommands":{}
+		},
 		"guild":{
 			"aliases":["g","guilds"],
 			"procedure":"doGuild",
@@ -164,7 +177,7 @@
 					"args":["text"],
 					"help":{
 						"id":"guild details",
-			    	    "title":"SWGOH Guild Lookup Details",
+			    	    "title":"SWGOH Guild Lookup - Roster Details",
 				        "text":"List all registered players in a guild ordered by GP\nGuild can be searched by name, or by any allycode of a guild member",
 				        "example":"*%PREFIX%%COMMAND% <allycode|guild>*"
 			    	}
@@ -175,8 +188,19 @@
 					"args":["text"],
 					"help":{
 						"id":"guild stats",
-			    	    "title":"SWGOH Guild Lookup Stats",
+			    	    "title":"SWGOH Guild Lookup - GP Stats",
 				        "text":"Show round-up stats for a specified guild\nGuild can be searched by name, or by any allycode of a guild member",
+				        "example":"*%PREFIX%%COMMAND% <allycode|guild>*"
+			    	}
+				},
+				"zetas":{
+					"aliases":["z", "zeta"],
+					"procedure":"guildZetas",
+					"args":["text"],
+					"help":{
+						"id":"guild zetas",
+			    	    "title":"SWGOH Guild Lookup - Zeta Abilities",
+				        "text":"Show round-up of zeta abilitis for an entire guild\nGuild can be searched by name, or by any allycode of a guild member",
 				        "example":"*%PREFIX%%COMMAND% <allycode|guild>*"
 			    	}
 				}
@@ -232,8 +256,13 @@
         	"title":"SWGOH Guild Lookup",
         	"text":"Lookup details around a specified guild.\n\nGuild identifier can be the guild name, or an allycode or of a guild member",
         	"example":"*%PREFIX%%COMMAND% <identifier>*\n*%PREFIX%%COMMAND% <identifier>*\n"
-        }
-
+        },
+		"event":{
+            "id":"event",
+            "title":"SWGOH Event Schedule",
+            "text":"Peek the currect event schedule\nNote: *subject to change*",
+            "example":"*%PREFIX%%COMMAND%*"
+    	}
     },
     
     "queries":{
@@ -259,7 +288,9 @@
     	"GET_GUILD_PLAYERS_BY_GUILDNAME":"CALL spGetGuildPlayersByGuild( ? )",
     	"GET_GUILD_BY_ALLYCODE":"CALL spGetGuildByAllyCode( ? )",
     	"GET_GUILD_BY_GUILDNAME":"CALL spGetGuildByName( ? )",
-    	"GET_ALL_GUILDS":"CALL spGetAllGuilds()"
+    	"GET_ALL_GUILDS":"CALL spGetAllGuilds()",
+    	"GET_GUILD_ZETAS_BY_ALLYCODE":"CALL allGuildZetasByAllycode( ?, ? )",
+    	"GET_GUILD_ZETAS_BY_GUILDNAME":"CALL allGuildZetasByGuildname( ?, ? )"
     		
     }
     

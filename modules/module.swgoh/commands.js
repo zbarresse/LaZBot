@@ -20,6 +20,17 @@ async function doHeist( obj ) {
 	return false;
 }
 
+async function doEvent( obj ) {
+    if( obj.cmdObj.args.id === 'help' ) { return obj.help(obj.cmdObj.help); }
+    if( obj.cmdObj.subcmd ) {
+        let process = obj.moduleConfig.commands[obj.cmdObj.cmd].subcommands[obj.cmdObj.subcmd].procedure
+        return require('./event.js')[process]( obj ); 
+    } else {
+        return require('./event.js')["event"]( obj );
+    }
+    return false;
+}
+
 async function doMod( obj ) {
 	if( obj.cmdObj.args.id === 'help' ) { return obj.help(obj.cmdObj.help); }
 	if( obj.cmdObj.subcmd ) {
@@ -75,6 +86,9 @@ module.exports = {
     },
     doHeist: async ( obj ) => { 
     	return await doHeist( obj ); 
+    },
+    doEvent: async ( obj ) => { 
+        return await doEvent( obj ); 
     },
     doMod: async ( obj ) => { 
     	return await doMod( obj ); 
