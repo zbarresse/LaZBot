@@ -41,6 +41,18 @@ module.exports = {
     try {
       return await require('./warning.js')["warningInfo"]( obj );
     } catch(e) { obj.error('warning.warningInfo',e); }
+  },
+      
+  awayAdd: async ( obj ) => {
+    try {
+      return await require('./away.js')["awayAdd"]( obj );
+    } catch(e) { obj.error('away.awayAdd',e); }
+  },
+      
+  clearGo: async ( obj ) => {
+    try {
+      return await require('./clear.js')["clearGo"]( obj );
+    } catch(e) { obj.error('clear.clearGo',e); }
   }
   
 }
